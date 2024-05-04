@@ -40,10 +40,6 @@ export class EDAAppStack extends cdk.Stack {
     displayName: "New Image topic",
   }); 
 
-  const mailerQ = new sqs.Queue(this, "mailer-queue", {
-    receiveMessageWaitTime: cdk.Duration.seconds(10),
-  });
-
   // Lambda functions
 
   const processImageFn = new lambdanode.NodejsFunction(
@@ -57,12 +53,14 @@ export class EDAAppStack extends cdk.Stack {
     }
   );
 
-  const mailerFn = new lambdanode.NodejsFunction(this, "mailer-function", {
-    runtime: lambda.Runtime.NODEJS_16_X,
+  const confirmationMailerFn = new lambdanode.NodejsFunction(this, "confirmation-mailer-function", {
+    runtime: lambda.Runtime.NODEJS_18_X,
     memorySize: 1024,
     timeout: cdk.Duration.seconds(3),
-    entry: `${__dirname}/../lambdas/mailer.ts`,
+    entry: `${__dirname}/../lambdas/confirmationMailer.ts`,
   });
+
+  newImageTopic.addSubscription(new subs.LambdaSubscription(confirmationMailerFn));
 
   // S3 --> SQS
   imagesBucket.addEventNotification(
@@ -76,25 +74,19 @@ export class EDAAppStack extends cdk.Stack {
     maxBatchingWindow: cdk.Duration.seconds(10),
   });
 
-  const newImageMailEventSource = new events.SqsEventSource(mailerQ, {
-    batchSize: 5,
-    maxBatchingWindow: cdk.Duration.seconds(10),
-  }); 
-
   newImageTopic.addSubscription(
     new subs.SqsSubscription(imageProcessQueue)
   );
-  newImageTopic.addSubscription(new subs.SqsSubscription(mailerQ));
+  //newImageTopic.addSubscription(new subs.SqsSubscription(mailerQ));
 
   processImageFn.addEventSource(newImageEventSource);
-  mailerFn.addEventSource(newImageMailEventSource);
 
   // Permissions
 
   imagesBucket.grantRead(processImageFn);
   imagesTable.grantReadWriteData(processImageFn);
 
-  mailerFn.addToRolePolicy(
+  confirmationMailerFn.addToRolePolicy(
     new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: [
