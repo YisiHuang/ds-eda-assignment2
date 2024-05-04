@@ -22,6 +22,15 @@ export const handler: SNSHandler = async (event) => {
 
         await ddbDocClient.send(deleteCommand);
       }
+    }else if(message.name) {
+        const commandOutput = await ddbDocClient.send(
+          new DeleteCommand({
+            TableName: "Images",
+            Key: {
+                ImageName: message.name
+            }
+          })
+      )
     }
   }
 };

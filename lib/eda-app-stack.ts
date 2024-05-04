@@ -49,10 +49,6 @@ export class EDAAppStack extends cdk.Stack {
     displayName: "New Image topic",
   }); 
 
-  const deleteImageTopic = new sns.Topic(this, "DeleteImageTopic", {
-    displayName: "Delete Image topic",
-  });
-
   // Lambda functions
 
   const processImageFn = new lambdanode.NodejsFunction(
@@ -92,6 +88,17 @@ export class EDAAppStack extends cdk.Stack {
     entry: `${__dirname}/../lambdas/rejectionMailer.ts`,
   });
 
+  const updateImageFn = new lambdanode.NodejsFunction(
+    this,
+    "UpdateImage",
+    {
+      runtime: lambda.Runtime.NODEJS_18_X,
+      entry: `${__dirname}/../lambdas/updateImage.ts`,
+      timeout: cdk.Duration.seconds(15),
+      memorySize: 1024,
+    }
+  );
+
   newImageTopic.addSubscription(new subs.LambdaSubscription(confirmationMailerFn));
 
   // S3 --> SQS
@@ -102,7 +109,7 @@ export class EDAAppStack extends cdk.Stack {
 
   imagesBucket.addEventNotification(
     s3.EventType.OBJECT_REMOVED,
-    new s3n.SnsDestination(deleteImageTopic)
+    new s3n.SnsDestination(newImageTopic)
   )
 
   // SQS --> Lambda
@@ -111,11 +118,34 @@ export class EDAAppStack extends cdk.Stack {
     maxBatchingWindow: cdk.Duration.seconds(10),
   });
 
-  newImageTopic.addSubscription(
-    new subs.SqsSubscription(imageProcessQueue)
-  );
+  newImageTopic.addSubscription(new subs.SqsSubscription(imageProcessQueue,{
+    filterPolicyWithMessageBody: {
+      Records: sns.FilterOrPolicy.policy({
+        eventName: sns.FilterOrPolicy.filter(sns.SubscriptionFilter.stringFilter({
+          matchPrefixes: ['ObjectCreated:Put']
+        }))
+      })
+    }
+  }));
   //newImageTopic.addSubscription(new subs.SqsSubscription(mailerQ));
-  deleteImageTopic.addSubscription(new subs.LambdaSubscription(deleteImageFn));
+  newImageTopic.addSubscription(new subs.LambdaSubscription(deleteImageFn, {
+    filterPolicyWithMessageBody: {
+      Records: sns.FilterOrPolicy.policy({
+        eventName: sns.FilterOrPolicy.filter(sns.SubscriptionFilter.stringFilter({
+          matchPrefixes: ['ObjectRemoved:Delete']
+        }))
+      })
+    }
+  }))
+  newImageTopic.addSubscription(
+    new subs.LambdaSubscription(updateImageFn, {
+        filterPolicy: {
+          comment_type: sns.SubscriptionFilter.stringFilter({
+              allowlist: ['Update Table']
+          }),
+        },
+    })
+  );
 
   processImageFn.addEventSource(newImageEventSource);
 
@@ -131,7 +161,8 @@ export class EDAAppStack extends cdk.Stack {
 
   imagesBucket.grantRead(processImageFn);
   imagesTable.grantReadWriteData(processImageFn);
-  imagesTable.grantReadWriteData(deleteImageFn)
+  imagesTable.grantReadWriteData(deleteImageFn);
+  imagesTable.grantReadWriteData(updateImageFn)
 
   confirmationMailerFn.addToRolePolicy(
     new iam.PolicyStatement({
@@ -164,7 +195,7 @@ export class EDAAppStack extends cdk.Stack {
     });
 
     new cdk.CfnOutput(this, "topicARN", {
-      value: deleteImageTopic.topicArn,
+      value: newImageTopic.topicArn,
     });
   }
 }
