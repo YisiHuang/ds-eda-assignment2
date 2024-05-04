@@ -2,7 +2,7 @@
 
 __Name:__ Yisi Huang
 
-__YouTube Demo link__ - [\[The URL of the video demonstration of the app.\]](https://youtu.be/9TxDmmn_4Gk?si=wDJFCXme_MR11A2W)
+__YouTube Demo link__ - [\[EDA Assignment Video Demonstration.\]](https://youtu.be/9TxDmmn_4Gk?si=wDJFCXme_MR11A2W)
 
 
 ### Phase 1.
