@@ -2,43 +2,36 @@
 
 __Name:__ Yisi Huang
 
-__YouTube Demo link__ - [The URL of the video demonstration of the app.]
-
-[ Note: The video must include an audio.]
+__YouTube Demo link__ - [\[The URL of the video demonstration of the app.\]](https://youtu.be/9TxDmmn_4Gk?si=wDJFCXme_MR11A2W)
 
 
 ### Phase 1.
 
-[ List the Lambda functions in this phase's architecture and state their working status.]
-
-e.g.
-
 + Confirmation Mailer - Fully implemented.
+- Lambda Function: confirmationMailer.ts
 + Rejection Mailer - Fully implemented.
-+ Process Image - Partially working
+- Lambda Function: rejectionMailer.ts
++ Process Image - Fully implemented.
+- Lambda Function: processImage.ts
 
 ### Phase 2 (if relevant).
 
-[ List the Lambda functions in this phase's architecture and state their working status.]
-
-e.g.
-
 + Confirmation Mailer - Fully implemented.
 + Rejection Mailer - Fully implemented.
-+ Process Image - Partially working.
-+ Update Table - Not implemented.
-+ etc
++ Process Image - Fully implemented.
++ Update Table - Fully implemented.
+- Lambda Function: updateImage.ts
++ Delete Table - Fully implemented.
+- Lambda Function: deleteImage.ts
 
 ### Phase 3 (if relevant).
 
-[ List the Lambda functions in this phase's architecture and state their working status.]
-
-e.g.
+All user-initiated events are now published to one SNS topic, and all the subscribers must filter out those messages of interest to them using attribute or message body filtering techniques.
 
 + Confirmation Mailer - Fully implemented.
 + Process Image - Fully implemented.
-+ Update Table - Not implemented.
-+ Delete Mailer - Fully implemented..
-+ etc
-+ etc
++ Update Table - Fully implemented.
+- Lambda Function: updateImage.ts
++ Delete Mailer - Fully implemented.
+- Lambda Function: deleteMailer.ts
 
