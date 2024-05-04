@@ -1,3 +1,44 @@
+## EDA Assignment - Distributed Systems.
+
+__Name:__ Yisi Huang
+
+__YouTube Demo link__ - [The URL of the video demonstration of the app.]
+
+[ Note: The video must include an audio.]
 
 
-aws s3 cp test.txt s3://a-bucket/test.txt --metadata '{"x-amz-meta-cms-id":"34533452"}'
+### Phase 1.
+
+[ List the Lambda functions in this phase's architecture and state their working status.]
+
+e.g.
+
++ Confirmation Mailer - Fully implemented.
++ Rejection Mailer - Fully implemented.
++ Process Image - Partially working
+
+### Phase 2 (if relevant).
+
+[ List the Lambda functions in this phase's architecture and state their working status.]
+
+e.g.
+
++ Confirmation Mailer - Fully implemented.
++ Rejection Mailer - Fully implemented.
++ Process Image - Partially working.
++ Update Table - Not implemented.
++ etc
+
+### Phase 3 (if relevant).
+
+[ List the Lambda functions in this phase's architecture and state their working status.]
+
+e.g.
+
++ Confirmation Mailer - Fully implemented.
++ Process Image - Fully implemented.
++ Update Table - Not implemented.
++ Delete Mailer - Fully implemented..
++ etc
++ etc
+
