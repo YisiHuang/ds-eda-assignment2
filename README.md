@@ -8,11 +8,11 @@ __YouTube Demo link__ - [\[The URL of the video demonstration of the app.\]](htt
 ### Phase 1.
 
 + Confirmation Mailer - Fully implemented.
-- Lambda Function: confirmationMailer.ts
+    - Lambda Function: confirmationMailer.ts
 + Rejection Mailer - Fully implemented.
-- Lambda Function: rejectionMailer.ts
+    - Lambda Function: rejectionMailer.ts
 + Process Image - Fully implemented.
-- Lambda Function: processImage.ts
+    - Lambda Function: processImage.ts
 
 ### Phase 2 (if relevant).
 
@@ -20,9 +20,9 @@ __YouTube Demo link__ - [\[The URL of the video demonstration of the app.\]](htt
 + Rejection Mailer - Fully implemented.
 + Process Image - Fully implemented.
 + Update Table - Fully implemented.
-- Lambda Function: updateImage.ts
+    - Lambda Function: updateImage.ts
 + Delete Table - Fully implemented.
-- Lambda Function: deleteImage.ts
+    - Lambda Function: deleteImage.ts
 
 ### Phase 3 (if relevant).
 
@@ -31,7 +31,7 @@ All user-initiated events are now published to one SNS topic, and all the subscr
 + Confirmation Mailer - Fully implemented.
 + Process Image - Fully implemented.
 + Update Table - Fully implemented.
-- Lambda Function: updateImage.ts
+    - Lambda Function: updateImage.ts
 + Delete Mailer - Fully implemented.
-- Lambda Function: deleteMailer.ts
+    - Lambda Function: deleteMailer.ts
 
